@@ -25,10 +25,12 @@ type KeywordServiceClient interface {
 	// Create
 	Create(ctx context.Context, in *Keyword, opts ...grpc.CallOption) (*Keyword, error)
 	// Update
-	Update(ctx context.Context, in *Keyword, opts ...grpc.CallOption) (*Keyword, error)
+	Update(ctx context.Context, in *Keyword, opts ...grpc.CallOption) (*KeywordBoolResponse, error)
+	// Delete
+	Delete(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordBoolResponse, error)
 	// Get
 	GetById(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*Keyword, error)
-	GetListByChannel(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordList, error)
+	GetListByMedia(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordList, error)
 }
 
 type keywordServiceClient struct {
@@ -48,9 +50,18 @@ func (c *keywordServiceClient) Create(ctx context.Context, in *Keyword, opts ...
 	return out, nil
 }
 
-func (c *keywordServiceClient) Update(ctx context.Context, in *Keyword, opts ...grpc.CallOption) (*Keyword, error) {
-	out := new(Keyword)
+func (c *keywordServiceClient) Update(ctx context.Context, in *Keyword, opts ...grpc.CallOption) (*KeywordBoolResponse, error) {
+	out := new(KeywordBoolResponse)
 	err := c.cc.Invoke(ctx, "/keyword.KeywordService/Update", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *keywordServiceClient) Delete(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordBoolResponse, error) {
+	out := new(KeywordBoolResponse)
+	err := c.cc.Invoke(ctx, "/keyword.KeywordService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +77,9 @@ func (c *keywordServiceClient) GetById(ctx context.Context, in *KeywordIdRequest
 	return out, nil
 }
 
-func (c *keywordServiceClient) GetListByChannel(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordList, error) {
+func (c *keywordServiceClient) GetListByMedia(ctx context.Context, in *KeywordIdRequest, opts ...grpc.CallOption) (*KeywordList, error) {
 	out := new(KeywordList)
-	err := c.cc.Invoke(ctx, "/keyword.KeywordService/GetListByChannel", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/keyword.KeywordService/GetListByMedia", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,10 +93,12 @@ type KeywordServiceServer interface {
 	// Create
 	Create(context.Context, *Keyword) (*Keyword, error)
 	// Update
-	Update(context.Context, *Keyword) (*Keyword, error)
+	Update(context.Context, *Keyword) (*KeywordBoolResponse, error)
+	// Delete
+	Delete(context.Context, *KeywordIdRequest) (*KeywordBoolResponse, error)
 	// Get
 	GetById(context.Context, *KeywordIdRequest) (*Keyword, error)
-	GetListByChannel(context.Context, *KeywordIdRequest) (*KeywordList, error)
+	GetListByMedia(context.Context, *KeywordIdRequest) (*KeywordList, error)
 }
 
 // UnimplementedKeywordServiceServer should be embedded to have forward compatible implementations.
@@ -95,14 +108,17 @@ type UnimplementedKeywordServiceServer struct {
 func (UnimplementedKeywordServiceServer) Create(context.Context, *Keyword) (*Keyword, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedKeywordServiceServer) Update(context.Context, *Keyword) (*Keyword, error) {
+func (UnimplementedKeywordServiceServer) Update(context.Context, *Keyword) (*KeywordBoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedKeywordServiceServer) Delete(context.Context, *KeywordIdRequest) (*KeywordBoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedKeywordServiceServer) GetById(context.Context, *KeywordIdRequest) (*Keyword, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
-func (UnimplementedKeywordServiceServer) GetListByChannel(context.Context, *KeywordIdRequest) (*KeywordList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetListByChannel not implemented")
+func (UnimplementedKeywordServiceServer) GetListByMedia(context.Context, *KeywordIdRequest) (*KeywordList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListByMedia not implemented")
 }
 
 // UnsafeKeywordServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -152,6 +168,24 @@ func _KeywordService_Update_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _KeywordService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(KeywordIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KeywordServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/keyword.KeywordService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KeywordServiceServer).Delete(ctx, req.(*KeywordIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _KeywordService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(KeywordIdRequest)
 	if err := dec(in); err != nil {
@@ -170,20 +204,20 @@ func _KeywordService_GetById_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KeywordService_GetListByChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KeywordService_GetListByMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(KeywordIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KeywordServiceServer).GetListByChannel(ctx, in)
+		return srv.(KeywordServiceServer).GetListByMedia(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/keyword.KeywordService/GetListByChannel",
+		FullMethod: "/keyword.KeywordService/GetListByMedia",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeywordServiceServer).GetListByChannel(ctx, req.(*KeywordIdRequest))
+		return srv.(KeywordServiceServer).GetListByMedia(ctx, req.(*KeywordIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -204,12 +238,16 @@ var KeywordService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KeywordService_Update_Handler,
 		},
 		{
+			MethodName: "Delete",
+			Handler:    _KeywordService_Delete_Handler,
+		},
+		{
 			MethodName: "GetById",
 			Handler:    _KeywordService_GetById_Handler,
 		},
 		{
-			MethodName: "GetListByChannel",
-			Handler:    _KeywordService_GetListByChannel_Handler,
+			MethodName: "GetListByMedia",
+			Handler:    _KeywordService_GetListByMedia_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

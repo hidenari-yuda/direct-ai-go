@@ -25,7 +25,7 @@ type ChatInteractor interface {
 	GetById(id uint) (*pb.Chat, error)
 
 	// get list by user id
-	GetListByGroupId(groupId uint) ([]*pb.Chat, error)
+	GetListByGroup(groupId uint) ([]*pb.Chat, error)
 
 	// stream
 	GetStream(ctx context.Context, stream chan<- pb.Chat) error
@@ -101,14 +101,14 @@ func (i *ChatInteractorImpl) GetById(id uint) (*pb.Chat, error) {
 	return chat, nil
 }
 
-func (i *ChatInteractorImpl) GetListByGroupId(groupId uint) ([]*pb.Chat, error) {
+func (i *ChatInteractorImpl) GetListByGroup(groupId uint) ([]*pb.Chat, error) {
 	var (
 		chats []*pb.Chat
 		err   error
 	)
 
 	// ユーザー登録
-	chats, err = i.chatRepository.GetListByGroupId(groupId)
+	chats, err = i.chatRepository.GetListByGroup(groupId)
 	if err != nil {
 		log.Println("error is:", err)
 		return chats, err

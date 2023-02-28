@@ -22,7 +22,7 @@ type ScriptInteractor interface {
 	GetById(id int64) (*pb.Script, error)
 
 	// get list by media id
-	GetListByMediaId(mediaId int64) ([]*pb.Script, error)
+	GetListByMedia(mediaId int64) ([]*pb.Script, error)
 
 	// admin API
 	GetAll() ([]*pb.Script, error)
@@ -96,7 +96,7 @@ func (i *ScriptInteractorImpl) GetById(id int64) (*pb.Script, error) {
 }
 
 // GetListByMediaId
-func (i *ScriptInteractorImpl) GetListByMediaId(userId int64) ([]*pb.Script, error) {
+func (i *ScriptInteractorImpl) GetListByMedia(userId int64) ([]*pb.Script, error) {
 	var (
 		users []*pb.Script
 		err   error

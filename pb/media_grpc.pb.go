@@ -33,7 +33,7 @@ type MediaServiceClient interface {
 	GetById(ctx context.Context, in *MediaIdRequest, opts ...grpc.CallOption) (*Media, error)
 	// get by media_type
 	GetListByType(ctx context.Context, in *MediaTypeRequest, opts ...grpc.CallOption) (*MediaList, error)
-	GetListByUserId(ctx context.Context, in *MediaIdRequest, opts ...grpc.CallOption) (*MediaList, error)
+	GetListByUser(ctx context.Context, in *MediaIdRequest, opts ...grpc.CallOption) (*MediaList, error)
 	// get list by id list
 	GetMediaListByIdList(ctx context.Context, opts ...grpc.CallOption) (MediaService_GetMediaListByIdListClient, error)
 	// get all
@@ -93,9 +93,9 @@ func (c *mediaServiceClient) GetListByType(ctx context.Context, in *MediaTypeReq
 	return out, nil
 }
 
-func (c *mediaServiceClient) GetListByUserId(ctx context.Context, in *MediaIdRequest, opts ...grpc.CallOption) (*MediaList, error) {
+func (c *mediaServiceClient) GetListByUser(ctx context.Context, in *MediaIdRequest, opts ...grpc.CallOption) (*MediaList, error) {
 	out := new(MediaList)
-	err := c.cc.Invoke(ctx, "/media.MediaService/GetListByUserId", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/media.MediaService/GetListByUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +159,7 @@ type MediaServiceServer interface {
 	GetById(context.Context, *MediaIdRequest) (*Media, error)
 	// get by media_type
 	GetListByType(context.Context, *MediaTypeRequest) (*MediaList, error)
-	GetListByUserId(context.Context, *MediaIdRequest) (*MediaList, error)
+	GetListByUser(context.Context, *MediaIdRequest) (*MediaList, error)
 	// get list by id list
 	GetMediaListByIdList(MediaService_GetMediaListByIdListServer) error
 	// get all
@@ -185,8 +185,8 @@ func (UnimplementedMediaServiceServer) GetById(context.Context, *MediaIdRequest)
 func (UnimplementedMediaServiceServer) GetListByType(context.Context, *MediaTypeRequest) (*MediaList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetListByType not implemented")
 }
-func (UnimplementedMediaServiceServer) GetListByUserId(context.Context, *MediaIdRequest) (*MediaList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetListByUserId not implemented")
+func (UnimplementedMediaServiceServer) GetListByUser(context.Context, *MediaIdRequest) (*MediaList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListByUser not implemented")
 }
 func (UnimplementedMediaServiceServer) GetMediaListByIdList(MediaService_GetMediaListByIdListServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetMediaListByIdList not implemented")
@@ -296,20 +296,20 @@ func _MediaService_GetListByType_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MediaService_GetListByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MediaService_GetListByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MediaIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MediaServiceServer).GetListByUserId(ctx, in)
+		return srv.(MediaServiceServer).GetListByUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/media.MediaService/GetListByUserId",
+		FullMethod: "/media.MediaService/GetListByUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServiceServer).GetListByUserId(ctx, req.(*MediaIdRequest))
+		return srv.(MediaServiceServer).GetListByUser(ctx, req.(*MediaIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -386,8 +386,8 @@ var MediaService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MediaService_GetListByType_Handler,
 		},
 		{
-			MethodName: "GetListByUserId",
-			Handler:    _MediaService_GetListByUserId_Handler,
+			MethodName: "GetListByUser",
+			Handler:    _MediaService_GetListByUser_Handler,
 		},
 		{
 			MethodName: "GetAll",

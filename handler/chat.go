@@ -92,9 +92,9 @@ func (s *ChatServiceServer) GetById(ctx context.Context, req *pb.ChatIdRequest) 
 }
 
 // get chat  by user id
-func (s *ChatServiceServer) GetListByGroupId(ctx context.Context, req *pb.ChatIdRequest) (*pb.ChatList, error) {
+func (s *ChatServiceServer) GetListByGroup(ctx context.Context, req *pb.ChatIdRequest) (*pb.ChatList, error) {
 
-	res, err := s.ChatInteractor.GetListByGroupId(uint(req.Id))
+	res, err := s.ChatInteractor.GetListByGroup(uint(req.Id))
 	if err != nil {
 		return nil, err
 	}

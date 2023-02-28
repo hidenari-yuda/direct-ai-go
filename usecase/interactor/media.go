@@ -22,7 +22,7 @@ type MediaInteractor interface {
 	GetById(id int64) (*pb.Media, error)
 
 	// get list by user id
-	GetListByUserId(userId int64) ([]*pb.Media, error)
+	GetListByUser(userId int64) ([]*pb.Media, error)
 
 	// get list by type
 	GetListByType(mediaType int64) ([]*pb.Media, error)
@@ -99,7 +99,7 @@ func (i *MediaInteractorImpl) GetById(id int64) (*pb.Media, error) {
 }
 
 // GetListByUserId
-func (i *MediaInteractorImpl) GetListByUserId(userId int64) ([]*pb.Media, error) {
+func (i *MediaInteractorImpl) GetListByUser(userId int64) ([]*pb.Media, error) {
 	var (
 		users []*pb.Media
 		err   error

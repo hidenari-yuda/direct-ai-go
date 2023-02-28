@@ -25,10 +25,13 @@ type CompetitorServiceClient interface {
 	// Create
 	Create(ctx context.Context, in *Competitor, opts ...grpc.CallOption) (*Competitor, error)
 	// Update
-	Update(ctx context.Context, in *Competitor, opts ...grpc.CallOption) (*Competitor, error)
+	Update(ctx context.Context, in *Competitor, opts ...grpc.CallOption) (*CompetitorBoolResponse, error)
+	// Delete
+	Delete(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorBoolResponse, error)
 	// Get
 	GetById(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*Competitor, error)
-	GetListByChannel(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error)
+	GetListByMedia(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error)
+	GetListByType(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error)
 }
 
 type competitorServiceClient struct {
@@ -48,9 +51,18 @@ func (c *competitorServiceClient) Create(ctx context.Context, in *Competitor, op
 	return out, nil
 }
 
-func (c *competitorServiceClient) Update(ctx context.Context, in *Competitor, opts ...grpc.CallOption) (*Competitor, error) {
-	out := new(Competitor)
+func (c *competitorServiceClient) Update(ctx context.Context, in *Competitor, opts ...grpc.CallOption) (*CompetitorBoolResponse, error) {
+	out := new(CompetitorBoolResponse)
 	err := c.cc.Invoke(ctx, "/competitor.CompetitorService/Update", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *competitorServiceClient) Delete(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorBoolResponse, error) {
+	out := new(CompetitorBoolResponse)
+	err := c.cc.Invoke(ctx, "/competitor.CompetitorService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +78,18 @@ func (c *competitorServiceClient) GetById(ctx context.Context, in *CompetitorIdR
 	return out, nil
 }
 
-func (c *competitorServiceClient) GetListByChannel(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error) {
+func (c *competitorServiceClient) GetListByMedia(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error) {
 	out := new(CompetitorList)
-	err := c.cc.Invoke(ctx, "/competitor.CompetitorService/GetListByChannel", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/competitor.CompetitorService/GetListByMedia", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *competitorServiceClient) GetListByType(ctx context.Context, in *CompetitorIdRequest, opts ...grpc.CallOption) (*CompetitorList, error) {
+	out := new(CompetitorList)
+	err := c.cc.Invoke(ctx, "/competitor.CompetitorService/GetListByType", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,10 +103,13 @@ type CompetitorServiceServer interface {
 	// Create
 	Create(context.Context, *Competitor) (*Competitor, error)
 	// Update
-	Update(context.Context, *Competitor) (*Competitor, error)
+	Update(context.Context, *Competitor) (*CompetitorBoolResponse, error)
+	// Delete
+	Delete(context.Context, *CompetitorIdRequest) (*CompetitorBoolResponse, error)
 	// Get
 	GetById(context.Context, *CompetitorIdRequest) (*Competitor, error)
-	GetListByChannel(context.Context, *CompetitorIdRequest) (*CompetitorList, error)
+	GetListByMedia(context.Context, *CompetitorIdRequest) (*CompetitorList, error)
+	GetListByType(context.Context, *CompetitorIdRequest) (*CompetitorList, error)
 }
 
 // UnimplementedCompetitorServiceServer should be embedded to have forward compatible implementations.
@@ -95,14 +119,20 @@ type UnimplementedCompetitorServiceServer struct {
 func (UnimplementedCompetitorServiceServer) Create(context.Context, *Competitor) (*Competitor, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedCompetitorServiceServer) Update(context.Context, *Competitor) (*Competitor, error) {
+func (UnimplementedCompetitorServiceServer) Update(context.Context, *Competitor) (*CompetitorBoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedCompetitorServiceServer) Delete(context.Context, *CompetitorIdRequest) (*CompetitorBoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedCompetitorServiceServer) GetById(context.Context, *CompetitorIdRequest) (*Competitor, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
-func (UnimplementedCompetitorServiceServer) GetListByChannel(context.Context, *CompetitorIdRequest) (*CompetitorList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetListByChannel not implemented")
+func (UnimplementedCompetitorServiceServer) GetListByMedia(context.Context, *CompetitorIdRequest) (*CompetitorList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListByMedia not implemented")
+}
+func (UnimplementedCompetitorServiceServer) GetListByType(context.Context, *CompetitorIdRequest) (*CompetitorList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListByType not implemented")
 }
 
 // UnsafeCompetitorServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -152,6 +182,24 @@ func _CompetitorService_Update_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CompetitorService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompetitorIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompetitorServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/competitor.CompetitorService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompetitorServiceServer).Delete(ctx, req.(*CompetitorIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CompetitorService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompetitorIdRequest)
 	if err := dec(in); err != nil {
@@ -170,20 +218,38 @@ func _CompetitorService_GetById_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CompetitorService_GetListByChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CompetitorService_GetListByMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CompetitorIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CompetitorServiceServer).GetListByChannel(ctx, in)
+		return srv.(CompetitorServiceServer).GetListByMedia(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/competitor.CompetitorService/GetListByChannel",
+		FullMethod: "/competitor.CompetitorService/GetListByMedia",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CompetitorServiceServer).GetListByChannel(ctx, req.(*CompetitorIdRequest))
+		return srv.(CompetitorServiceServer).GetListByMedia(ctx, req.(*CompetitorIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CompetitorService_GetListByType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompetitorIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CompetitorServiceServer).GetListByType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/competitor.CompetitorService/GetListByType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CompetitorServiceServer).GetListByType(ctx, req.(*CompetitorIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -204,12 +270,20 @@ var CompetitorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CompetitorService_Update_Handler,
 		},
 		{
+			MethodName: "Delete",
+			Handler:    _CompetitorService_Delete_Handler,
+		},
+		{
 			MethodName: "GetById",
 			Handler:    _CompetitorService_GetById_Handler,
 		},
 		{
-			MethodName: "GetListByChannel",
-			Handler:    _CompetitorService_GetListByChannel_Handler,
+			MethodName: "GetListByMedia",
+			Handler:    _CompetitorService_GetListByMedia_Handler,
+		},
+		{
+			MethodName: "GetListByType",
+			Handler:    _CompetitorService_GetListByType_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

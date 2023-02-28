@@ -112,9 +112,9 @@ func (r *ChatGroupRepositoryImpl) GetById(id uint) (ChatGroup *pb.ChatGroup, err
 }
 
 // get list by user id
-func (r *ChatGroupRepositoryImpl) GetListByUserId(userId uint) (ChatGroups []*pb.ChatGroup, err error) {
+func (r *ChatGroupRepositoryImpl) GetListByUser(userId uint) (ChatGroups []*pb.ChatGroup, err error) {
 	err = r.executer.Select(
-		r.Name+"GetListByUserId",
+		r.Name+"GetListByUser",
 		&ChatGroups,
 		`
 		SELECT * 

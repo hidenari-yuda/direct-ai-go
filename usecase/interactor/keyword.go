@@ -92,14 +92,14 @@ func (i *KeywordInteractorImpl) GetById(id int64) (*pb.Keyword, error) {
 	return keyword, nil
 }
 
-func (i *KeywordInteractorImpl) GetListByUserId(userId int64) ([]*pb.Keyword, error) {
+func (i *KeywordInteractorImpl) GetListByUser(userId int64) ([]*pb.Keyword, error) {
 	var (
 		keywords []*pb.Keyword
 		err        error
 	)
 
 	// ユーザー登録
-	// keywords, err = i.keywordRepository.GetListByUserId(userId)
+	// keywords, err = i.keywordRepository.GetListByUser(userId)
 	if err != nil {
 		log.Println("error is:", err)
 		return keywords, err

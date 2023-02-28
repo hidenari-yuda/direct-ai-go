@@ -39,7 +39,7 @@ type ChatGroupRepository interface {
 	GetById(id uint) (*pb.ChatGroup, error)
 
 	// get list by user id
-	GetListByUserId(userId uint) ([]*pb.ChatGroup, error)
+	GetListByUser(userId uint) ([]*pb.ChatGroup, error)
 }
 
 type ChatRepository interface {
@@ -57,7 +57,7 @@ type ChatRepository interface {
 	GetById(id uint) (*pb.Chat, error)
 
 	// get list by user id
-	GetListByGroupId(groupId uint) ([]*pb.Chat, error)
+	GetListByGroup(groupId uint) ([]*pb.Chat, error)
 }
 
 type ChatUserRepository interface {
@@ -71,7 +71,7 @@ type ChatUserRepository interface {
 	// Get
 	GetById(id uint) (*pb.ChatUser, error)
 
-	GetListByGroupId(groupId uint) ([]*pb.ChatUser, error)
+	GetListByGroup(groupId uint) ([]*pb.ChatUser, error)
 }
 
 type MediaRepository interface {
@@ -89,7 +89,7 @@ type MediaRepository interface {
 	GetById(id int64) (*pb.Media, error)
 
 	// get list by user id
-	GetListByUserId(userId int64) ([]*pb.Media, error)
+	GetListByUser(userId int64) ([]*pb.Media, error)
 
 	// get list by type
 	GetListByType(mediaType int64) ([]*pb.Media, error)
@@ -113,7 +113,7 @@ type KeywordRepository interface {
 	GetById(id int64) (*pb.Keyword, error)
 
 	// get list by user id
-	GetListByMediaId(mediaId int64) ([]*pb.Keyword, error)
+	GetListByMedia(mediaId int64) ([]*pb.Keyword, error)
 }
 
 type ScriptRepository interface {
@@ -131,7 +131,7 @@ type ScriptRepository interface {
 	GetById(id int64) (*pb.Script, error)
 
 	// get list by media id
-	GetListByMediaId(mediaId int64) ([]*pb.Script, error)
+	GetListByMedia(mediaId int64) ([]*pb.Script, error)
 
 	// get all
 	GetAll() ([]*pb.Script, error)

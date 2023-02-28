@@ -3,8 +3,6 @@ package handler
 import (
 	"context"
 
-	// "github.com/hidenari-yuda/direct-ai-go/domain/requests"
-	// "github.com/hidenari-yuda/direct-ai-go/domain/responses"
 	"github.com/hidenari-yuda/direct-ai-go/infra/database"
 	"github.com/hidenari-yuda/direct-ai-go/infra/driver"
 	"github.com/hidenari-yuda/direct-ai-go/usecase"

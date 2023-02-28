@@ -25,10 +25,11 @@ type ScriptServiceClient interface {
 	Create(ctx context.Context, in *Script, opts ...grpc.CallOption) (*Script, error)
 	CreateHeadlineByKeyword(ctx context.Context, in *ScriptStringRequest, opts ...grpc.CallOption) (*Script, error)
 	CreateContentByKeyword(ctx context.Context, in *ScriptStringRequest, opts ...grpc.CallOption) (*Script, error)
-	Update(ctx context.Context, in *Script, opts ...grpc.CallOption) (*Script, error)
+	Update(ctx context.Context, in *Script, opts ...grpc.CallOption) (*ScriptBoolResponse, error)
+	Delete(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptBoolResponse, error)
 	// Get
 	GetById(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*Script, error)
-	GetListByMediaId(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptList, error)
+	GetListByMedia(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptList, error)
 }
 
 type scriptServiceClient struct {
@@ -66,9 +67,18 @@ func (c *scriptServiceClient) CreateContentByKeyword(ctx context.Context, in *Sc
 	return out, nil
 }
 
-func (c *scriptServiceClient) Update(ctx context.Context, in *Script, opts ...grpc.CallOption) (*Script, error) {
-	out := new(Script)
+func (c *scriptServiceClient) Update(ctx context.Context, in *Script, opts ...grpc.CallOption) (*ScriptBoolResponse, error) {
+	out := new(ScriptBoolResponse)
 	err := c.cc.Invoke(ctx, "/script.ScriptService/Update", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *scriptServiceClient) Delete(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptBoolResponse, error) {
+	out := new(ScriptBoolResponse)
+	err := c.cc.Invoke(ctx, "/script.ScriptService/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,9 +94,9 @@ func (c *scriptServiceClient) GetById(ctx context.Context, in *ScriptIdRequest, 
 	return out, nil
 }
 
-func (c *scriptServiceClient) GetListByMediaId(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptList, error) {
+func (c *scriptServiceClient) GetListByMedia(ctx context.Context, in *ScriptIdRequest, opts ...grpc.CallOption) (*ScriptList, error) {
 	out := new(ScriptList)
-	err := c.cc.Invoke(ctx, "/script.ScriptService/GetListByMediaId", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/script.ScriptService/GetListByMedia", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -100,10 +110,11 @@ type ScriptServiceServer interface {
 	Create(context.Context, *Script) (*Script, error)
 	CreateHeadlineByKeyword(context.Context, *ScriptStringRequest) (*Script, error)
 	CreateContentByKeyword(context.Context, *ScriptStringRequest) (*Script, error)
-	Update(context.Context, *Script) (*Script, error)
+	Update(context.Context, *Script) (*ScriptBoolResponse, error)
+	Delete(context.Context, *ScriptIdRequest) (*ScriptBoolResponse, error)
 	// Get
 	GetById(context.Context, *ScriptIdRequest) (*Script, error)
-	GetListByMediaId(context.Context, *ScriptIdRequest) (*ScriptList, error)
+	GetListByMedia(context.Context, *ScriptIdRequest) (*ScriptList, error)
 }
 
 // UnimplementedScriptServiceServer should be embedded to have forward compatible implementations.
@@ -119,14 +130,17 @@ func (UnimplementedScriptServiceServer) CreateHeadlineByKeyword(context.Context,
 func (UnimplementedScriptServiceServer) CreateContentByKeyword(context.Context, *ScriptStringRequest) (*Script, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateContentByKeyword not implemented")
 }
-func (UnimplementedScriptServiceServer) Update(context.Context, *Script) (*Script, error) {
+func (UnimplementedScriptServiceServer) Update(context.Context, *Script) (*ScriptBoolResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedScriptServiceServer) Delete(context.Context, *ScriptIdRequest) (*ScriptBoolResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedScriptServiceServer) GetById(context.Context, *ScriptIdRequest) (*Script, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetById not implemented")
 }
-func (UnimplementedScriptServiceServer) GetListByMediaId(context.Context, *ScriptIdRequest) (*ScriptList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetListByMediaId not implemented")
+func (UnimplementedScriptServiceServer) GetListByMedia(context.Context, *ScriptIdRequest) (*ScriptList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListByMedia not implemented")
 }
 
 // UnsafeScriptServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -212,6 +226,24 @@ func _ScriptService_Update_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScriptService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ScriptIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScriptServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/script.ScriptService/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScriptServiceServer).Delete(ctx, req.(*ScriptIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ScriptService_GetById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScriptIdRequest)
 	if err := dec(in); err != nil {
@@ -230,20 +262,20 @@ func _ScriptService_GetById_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ScriptService_GetListByMediaId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ScriptService_GetListByMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ScriptIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ScriptServiceServer).GetListByMediaId(ctx, in)
+		return srv.(ScriptServiceServer).GetListByMedia(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/script.ScriptService/GetListByMediaId",
+		FullMethod: "/script.ScriptService/GetListByMedia",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ScriptServiceServer).GetListByMediaId(ctx, req.(*ScriptIdRequest))
+		return srv.(ScriptServiceServer).GetListByMedia(ctx, req.(*ScriptIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -272,12 +304,16 @@ var ScriptService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ScriptService_Update_Handler,
 		},
 		{
+			MethodName: "Delete",
+			Handler:    _ScriptService_Delete_Handler,
+		},
+		{
 			MethodName: "GetById",
 			Handler:    _ScriptService_GetById_Handler,
 		},
 		{
-			MethodName: "GetListByMediaId",
-			Handler:    _ScriptService_GetListByMediaId_Handler,
+			MethodName: "GetListByMedia",
+			Handler:    _ScriptService_GetListByMedia_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

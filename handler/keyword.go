@@ -91,9 +91,9 @@ func (s *KeywordServiceServer) GetById(ctx context.Context, req *pb.ChatIdReques
 }
 
 // get chat group by user id
-func (s *KeywordServiceServer) GetListByUserId(ctx context.Context, req *pb.ChatIdRequest) (*pb.KeywordList, error) {
+func (s *KeywordServiceServer) GetListByUser(ctx context.Context, req *pb.ChatIdRequest) (*pb.KeywordList, error) {
 
-	res, err := s.KeywordInteractor.GetListByUserId(req.Id)
+	res, err := s.KeywordInteractor.GetListByUser(req.Id)
 	if err != nil {
 		return nil, err
 	}

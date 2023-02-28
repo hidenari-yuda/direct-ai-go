@@ -22,7 +22,7 @@ type ChatGroupInteractor interface {
 	GetById(id uint) (*pb.ChatGroup, error)
 
 	// get list by user id
-	GetListByUserId(userId uint) ([]*pb.ChatGroup, error)
+	GetListByUser(userId uint) ([]*pb.ChatGroup, error)
 }
 
 type ChatGroupInteractorImpl struct {
@@ -92,14 +92,14 @@ func (i *ChatGroupInteractorImpl) GetById(id uint) (*pb.ChatGroup, error) {
 	return chatGroup, nil
 }
 
-func (i *ChatGroupInteractorImpl) GetListByUserId(userId uint) ([]*pb.ChatGroup, error) {
+func (i *ChatGroupInteractorImpl) GetListByUser(userId uint) ([]*pb.ChatGroup, error) {
 	var (
 		chatGroups []*pb.ChatGroup
 		err        error
 	)
 
 	// ユーザー登録
-	chatGroups, err = i.chatGroupRepository.GetListByUserId(userId)
+	chatGroups, err = i.chatGroupRepository.GetListByUser(userId)
 	if err != nil {
 		log.Println("error is:", err)
 		return chatGroups, err

@@ -97,9 +97,9 @@ func (s *MediaServiceServer) GetById(ctx context.Context, req *pb.MediaIdRequest
 }
 
 // get list by user id
-func (s *MediaServiceServer) GetListByUserId(ctx context.Context, req *pb.MediaIdRequest) (*pb.MediaList, error) {
+func (s *MediaServiceServer) GetListByUser(ctx context.Context, req *pb.MediaIdRequest) (*pb.MediaList, error) {
 
-	res, err := s.MediaInteractor.GetListByUserId(req.Id)
+	res, err := s.MediaInteractor.GetListByUser(req.Id)
 	if err != nil {
 		return nil, handleError(err)
 	}
