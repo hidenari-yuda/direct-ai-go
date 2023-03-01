@@ -105,7 +105,7 @@ func (i *MediaInteractorImpl) GetListByUser(userId int64) ([]*pb.Media, error) {
 		err   error
 	)
 
-	users, err = i.mediaRepository.GetListByUserId(userId)
+	users, err = i.mediaRepository.GetListByUser(userId)
 	if err != nil {
 		return users, err
 	}

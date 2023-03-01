@@ -10,6 +10,8 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/hidenari-yuda/direct-ai-go/pb"
+
+	"golang.org/x/xerrors"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -33,6 +35,7 @@ func (s *UserServiceServer) Create(ctx context.Context, req *pb.User) (*pb.User,
 
 	tx, err := s.Db.Begin()
 	if err != nil {
+		xerrors.Errorf("failed to begin transaction: %w", err)
 		return nil, handleError(err)
 	}
 

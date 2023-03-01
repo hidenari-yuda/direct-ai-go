@@ -22,7 +22,7 @@ type KeywordInteractor interface {
 	GetById(id int64) (*pb.Keyword, error)
 
 	// get list by user id
-	GetListByUserId(userId int64) ([]*pb.Keyword, error)
+	GetListByUser(userId int64) ([]*pb.Keyword, error)
 }
 
 type KeywordInteractorImpl struct {

@@ -102,7 +102,7 @@ func (i *ScriptInteractorImpl) GetListByMedia(userId int64) ([]*pb.Script, error
 		err   error
 	)
 
-	users, err = i.scriptRepository.GetListByMediaId(userId)
+	users, err = i.scriptRepository.GetListByMedia(userId)
 	if err != nil {
 		return users, err
 	}
